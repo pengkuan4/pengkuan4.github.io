@@ -4,7 +4,7 @@ export default defineAstroPaperConfig({
   site: {
     url: "https://pengkuan4.github.io/",
     title: "彭宽的博客",
-    description: "记录学习、开源工具、副业实验和个人思考。",
+    description: "记录学习和个人思考。",
     author: "彭宽",
     profile: "https://github.com/pengkuan4",
     ogImage: "default-og.jpg",
