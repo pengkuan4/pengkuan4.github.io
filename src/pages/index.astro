@@ -1,135 +1,251 @@
 ---
-import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import IconGithub from "@/assets/icons/socials/github.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
-import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { useTranslations } from "@/i18n";
+import {
+  profile,
+  heroStats,
+  featuredProjectSlots,
+  capabilityCards,
+  buildStack,
+  workflow,
+} from "@/data/portfolio";
 import config from "@/config";
 
-const { socials, posts: postsConfig } = config;
-
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
-
-const posts = await getCollection("posts");
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
-const homePath = getRelativeLocaleUrl(locale, "");
 ---
 
-<Layout>
+<Layout title={`${profile.name} | 个人作品集`} description={profile.summary}>
   <Header />
-  <main
-    id="main-content"
-    data-layout="index"
-    data-home-path={homePath}
-    class="app-layout"
-  >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        你好，我是彭宽
-      </h1>
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-
-      <p>
-        这里会记录我的学习过程、开源工具探索和一些阶段性的思考。
-        我希望把零散的尝试沉淀成可以复盘的文字，也把每一次小进步留在这里。
-      </p>
-      <p class="mt-2">
-        目前这个博客基于
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://github.com/satnaing/astro-paper"
+  <main id="main-content" class="app-layout pt-8 pb-16 sm:pt-10 sm:pb-20">
+    <section class="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+      <div class="space-y-6">
+        <div
+          class="border-border bg-background text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium"
         >
-          AstroPaper
-        </LinkButton> 搭建，后续会逐步整理内容和样式。
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
-            <Socials />
+          <span class="bg-accent size-2 rounded-full" aria-hidden="true"></span>
+          <span>GitHub Pages 免费托管</span>
+        </div>
+
+        <div class="space-y-4">
+          <p
+            class="text-muted-foreground text-sm font-medium tracking-[0.28em] uppercase"
+          >
+            Portfolio
+          </p>
+          <h1
+            class="text-foreground max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"
+          >
+            {profile.name}
+          </h1>
+          <p class="text-muted-foreground max-w-2xl text-lg leading-8">
+            {profile.role}。{profile.summary}
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <LinkButton
+            href={getRelativeLocaleUrl(locale, "projects")}
+            class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
+          >
+            查看项目
+            <IconArrowRight class="size-4" />
+          </LinkButton>
+          <LinkButton
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            class="border-border inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold"
+          >
+            <IconGithub class="size-4" />
+            GitHub
+          </LinkButton>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-3">
+          {
+            heroStats.map(item => (
+              <div class="border-border bg-background rounded-2xl border p-4">
+                <p class="text-muted-foreground text-xs tracking-[0.22em] uppercase">
+                  {item.label}
+                </p>
+                <p class="mt-2 text-base font-semibold">{item.value}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <p class="text-muted-foreground text-sm leading-6">
+          {profile.availability}
+        </p>
+      </div>
+
+      <aside class="border-border bg-background rounded-[1.5rem] border p-5">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <p
+              class="text-muted-foreground text-xs tracking-[0.24em] uppercase"
+            >
+              作品位
+            </p>
+            <h2 class="mt-2 text-lg font-semibold">预留给后续项目</h2>
           </div>
-        )
-      }
+          <span
+            class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs"
+          >
+            3 slots
+          </span>
+        </div>
+
+        <div class="mt-5 space-y-4">
+          {
+            featuredProjectSlots.map(slot => (
+              <div class="border-border bg-muted/15 rounded-2xl border p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-muted-foreground text-xs font-semibold tracking-[0.24em] uppercase">
+                      {slot.slot}
+                    </p>
+                    <p class="mt-1 font-medium">{slot.title}</p>
+                  </div>
+                  <span class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs">
+                    {slot.status}
+                  </span>
+                </div>
+                <div class="border-border bg-background mt-4 aspect-[16/8.5] rounded-2xl border border-dashed p-4">
+                  <div class="flex h-full flex-col justify-between">
+                    <div class="space-y-2">
+                      <div class="bg-foreground/10 h-4 w-1/2 rounded-full" />
+                      <div class="bg-foreground/10 h-4 w-4/5 rounded-full" />
+                    </div>
+                    <div class="text-muted-foreground flex items-center justify-between text-xs">
+                      <span>截图位</span>
+                      <span>待补充</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </aside>
     </section>
 
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-border border-b": recentPosts.length > 0 },
-          ]}
+    <section class="mt-16 space-y-6">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
+            作品结构
+          </p>
+          <h2 class="mt-2 text-2xl font-semibold">后续项目直接往这里填</h2>
+        </div>
+        <LinkButton
+          href={getRelativeLocaleUrl(locale, "projects")}
+          class="text-muted-foreground hover:text-accent hidden items-center gap-2 text-sm font-medium sm:inline-flex"
         >
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.featured}
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+          打开项目页
+          <IconArrowRight class="size-4" />
+        </LinkButton>
+      </div>
 
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">
-            {t.home.recentPosts}
-          </h2>
-          <ul>
-            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {
+          capabilityCards.map(card => (
+            <div class="border-border bg-background rounded-[1.25rem] border p-5">
+              <h3 class="text-base font-semibold">{card.title}</h3>
+              <p class="text-muted-foreground mt-3 text-sm leading-6">
+                {card.summary}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
 
-    <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
-        {t.home.allPosts}
-        <IconArrowRight class="inline-block rtl:-rotate-180" />
-      </LinkButton>
-    </div>
+    <section class="mt-16 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
+      <div class="border-border bg-background rounded-[1.5rem] border p-5">
+        <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
+          我关注的内容
+        </p>
+        <h2 class="mt-2 text-2xl font-semibold">
+          把项目做成能被面试官快速看懂的结构
+        </h2>
+        <p class="text-muted-foreground mt-4 text-sm leading-6">
+          主页先讲清楚你能解决什么，再把项目、结果和技术栈按层级展开。这个站点就是按这个思路搭的。
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          {
+            buildStack.map(item => (
+              <span class="border-border text-muted-foreground rounded-full border px-3 py-1 text-xs">
+                {item}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="border-border bg-background rounded-[1.5rem] border p-5">
+        <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
+          工作方式
+        </p>
+        <div class="mt-4 space-y-4">
+          {
+            workflow.map(item => (
+              <div class="flex gap-4">
+                <div class="text-accent shrink-0 text-sm font-semibold">
+                  {item.step}
+                </div>
+                <div class="min-w-0">
+                  <h3 class="text-base font-semibold">{item.title}</h3>
+                  <p class="text-muted-foreground mt-2 text-sm leading-6">
+                    {item.summary}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="border-border bg-background mt-16 rounded-[1.5rem] border p-5 sm:p-6"
+    >
+      <div
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <div>
+          <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
+            联系方式
+          </p>
+          <h2 class="mt-2 text-2xl font-semibold">
+            我会先把主页做成能直接投递的版本
+          </h2>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <LinkButton
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            class="border-border inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold"
+          >
+            <IconGithub class="size-4" />
+            GitHub
+          </LinkButton>
+          <LinkButton
+            href={getRelativeLocaleUrl(locale, "projects")}
+            class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
+          >
+            项目页
+            <IconArrowRight class="size-4" />
+          </LinkButton>
+        </div>
+      </div>
+    </section>
   </main>
   <Footer />
 </Layout>
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset;
-    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
-    if (indexLayout?.layout) {
-      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
-    }
-  });
-</script>

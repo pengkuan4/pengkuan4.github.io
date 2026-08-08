@@ -1,0 +1,120 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import LinkButton from "./LinkButton.astro";
+import type { PortfolioProject } from "@/data/portfolio";
+
+type Props = PortfolioProject & HTMLAttributes<"article">;
+
+const {
+  slot,
+  title,
+  status,
+  summary,
+  image,
+  stack = [],
+  links = [],
+  class: className,
+  ...attrs
+} = Astro.props;
+
+const hasSummary = summary.trim().length > 0;
+---
+
+<article
+  class:list={[
+    "group border-border bg-background flex h-full flex-col rounded-[1.25rem] border p-5 transition-colors",
+    "hover:border-accent/40 hover:bg-background",
+    className,
+  ]}
+  {...attrs}
+>
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <p
+        class="text-muted-foreground text-xs font-semibold tracking-[0.24em] uppercase"
+      >
+        {slot}
+      </p>
+      <h3 class="mt-2 text-lg font-semibold">{title}</h3>
+    </div>
+    <span
+      class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs"
+    >
+      {status}
+    </span>
+  </div>
+
+  <div
+    class="border-border bg-muted/25 mt-5 aspect-[16/10] overflow-hidden rounded-2xl border border-dashed p-4"
+  >
+    {
+      image ? (
+        <img
+          src={image}
+          alt={`${title} 项目截图`}
+          class="h-full w-full rounded-xl object-cover"
+          loading="lazy"
+        />
+      ) : hasSummary ? (
+        <div class="flex h-full flex-col justify-between">
+          <div class="space-y-2">
+            <div class="bg-foreground/10 h-4 w-1/2 rounded-full" />
+            <div class="bg-foreground/10 h-4 w-4/5 rounded-full" />
+            <div class="bg-foreground/10 h-4 w-2/3 rounded-full" />
+          </div>
+          <div class="space-y-2">
+            <div class="bg-foreground/10 h-3 w-3/4 rounded-full" />
+            <div class="bg-foreground/10 h-3 w-2/3 rounded-full" />
+          </div>
+        </div>
+      ) : (
+        <div class="flex h-full flex-col justify-between">
+          <div class="space-y-2">
+            <div class="bg-foreground/10 h-4 w-1/2 rounded-full" />
+            <div class="bg-foreground/10 h-4 w-4/5 rounded-full" />
+            <div class="bg-foreground/10 h-4 w-2/3 rounded-full" />
+          </div>
+          <div class="text-muted-foreground flex items-center justify-between text-xs">
+            <span>截图位</span>
+            <span>待上传</span>
+          </div>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    hasSummary && (
+      <p class="text-muted-foreground mt-4 text-sm leading-6">{summary}</p>
+    )
+  }
+
+  {
+    stack.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-2">
+        {stack.map(item => (
+          <span class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs">
+            {item}
+          </span>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    links.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-3">
+        {links.map(link => (
+          <LinkButton
+            href={link.href}
+            class="hover:text-accent inline-flex items-center gap-1 text-sm font-medium"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {link.label}
+          </LinkButton>
+        ))}
+      </div>
+    )
+  }
+</article>

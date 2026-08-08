@@ -1,25 +1,37 @@
 ---
+import IconFacebook from "@/assets/icons/socials/facebook.svg";
+import IconGithub from "@/assets/icons/socials/github.svg";
+import IconLinkedin from "@/assets/icons/socials/linkedin.svg";
+import IconMail from "@/assets/icons/socials/mail.svg";
+import IconPinterest from "@/assets/icons/socials/pinterest.svg";
+import IconTelegram from "@/assets/icons/socials/telegram.svg";
+import IconWhatsapp from "@/assets/icons/socials/whatsapp.svg";
+import IconX from "@/assets/icons/socials/x.svg";
 import config from "@/config";
 import LinkButton from "./LinkButton.astro";
 
 const { site, socials } = config;
 
-const icons = import.meta.glob<{
-  default: (_props: Record<string, unknown>) => unknown;
-}>("/src/assets/icons/socials/*.svg");
+const icons = {
+  facebook: IconFacebook,
+  github: IconGithub,
+  linkedin: IconLinkedin,
+  mail: IconMail,
+  pinterest: IconPinterest,
+  telegram: IconTelegram,
+  whatsapp: IconWhatsapp,
+  x: IconX,
+};
 
-const items = await Promise.all(
-  socials.map(async ({ name, url, linkTitle }) => {
-    const mod = await icons[`/src/assets/icons/socials/${name}.svg`]?.();
-    const Icon = mod?.default;
-    const title =
-      linkTitle ??
-      (url.startsWith("mailto:") || name === "mail"
-        ? `Send an email to ${site.title}`
-        : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
-    return { url, title, Icon };
-  })
-);
+const items = socials.map(({ name, url, linkTitle }) => {
+  const Icon = icons[name as keyof typeof icons];
+  const title =
+    linkTitle ??
+    (url.startsWith("mailto:") || name === "mail"
+      ? `Send an email to ${site.title}`
+      : `${site.title} on ${name.charAt(0).toUpperCase() + name.slice(1)}`);
+  return { url, title, Icon };
+});
 ---
 
 <div class="flex flex-wrap items-center gap-1">

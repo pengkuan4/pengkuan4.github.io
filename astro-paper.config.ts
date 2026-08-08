@@ -3,11 +3,11 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://pengkuan4.github.io/",
-    title: "彭宽的博客",
-    description: "记录学习和个人思考。",
+    title: "彭宽 | 个人作品集",
+    description: "面向求职展示的静态作品集，记录前端、自动化和项目交付。",
     author: "彭宽",
     profile: "https://github.com/pengkuan4",
-    ogImage: "default-og.jpg",
+    ogImage: "portfolio-og.png",
     lang: "zh-CN",
     timezone: "Asia/Shanghai",
     dir: "ltr",
@@ -20,20 +20,19 @@ export default defineAstroPaperConfig({
   features: {
     lightAndDarkMode: true,
     dynamicOgImage: false,
-    showArchives: true,
-    showBackButton: true,
+    showArchives: false,
+    showBackButton: false,
     editPost: {
-      enabled: true,
-      url: "https://github.com/pengkuan4/pengkuan4.github.io/edit/main/",
+      enabled: false,
     },
-    search: "pagefind",
+    search: false,
   },
   socials: [
-    { name: "github", url: "https://github.com/pengkuan4" },
+    {
+      name: "github",
+      url: "https://github.com/pengkuan4",
+      linkTitle: "GitHub 主页",
+    },
   ],
-  shareLinks: [
-    { name: "x",        url: "https://x.com/intent/post?url=" },
-    { name: "telegram", url: "https://t.me/share/url?url=" },
-    { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
-  ],
+  shareLinks: [],
 });
