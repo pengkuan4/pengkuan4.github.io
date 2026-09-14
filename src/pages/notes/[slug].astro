@@ -1,0 +1,78 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { notes, type ThoughtNote } from "@/data/notes";
+import config from "@/config";
+
+type Props = {
+  note: ThoughtNote;
+};
+
+export function getStaticPaths() {
+  return notes.map(note => ({
+    params: { slug: note.slug },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props;
+const locale = Astro.currentLocale ?? config.site.lang;
+---
+
+<Layout
+  title={`${note.title} | ${config.site.title}`}
+  description={note.excerpt}
+>
+  <Header />
+  <main id="main-content" class="app-layout pt-8 pb-16 sm:pt-10 sm:pb-20">
+    <article class="mx-auto max-w-3xl">
+      <LinkButton
+        href={getRelativeLocaleUrl(locale, "notes")}
+        class="text-muted-foreground hover:text-accent inline-flex items-center gap-2 text-sm font-medium"
+      >
+        <IconArrowLeft class="size-4" />
+        返回随记
+      </LinkButton>
+
+      <header class="border-border mt-7 border-b pb-8">
+        <div class="flex flex-wrap items-center gap-3">
+          <time datetime={note.datetime} class="text-muted-foreground text-sm">
+            {note.date}
+          </time>
+          <span
+            class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs"
+          >
+            {note.mood}
+          </span>
+        </div>
+        <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
+          {note.title}
+        </h1>
+        <p class="text-muted-foreground mt-5 text-base leading-7">
+          {note.excerpt}
+        </p>
+      </header>
+
+      <div class="mt-8 space-y-5 text-base leading-8">
+        {note.body.map(paragraph => <p>{paragraph}</p>)}
+      </div>
+
+      <footer class="border-border mt-10 border-t pt-6">
+        <div class="flex flex-wrap gap-2">
+          {
+            note.tags.map(tag => (
+              <span class="border-border text-muted-foreground rounded-full border px-3 py-1 text-xs">
+                {tag}
+              </span>
+            ))
+          }
+        </div>
+      </footer>
+    </article>
+  </main>
+  <Footer />
+</Layout>

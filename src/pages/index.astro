@@ -6,57 +6,57 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
-import {
-  profile,
-  heroStats,
-  featuredProjectSlots,
-  capabilityCards,
-  buildStack,
-  workflow,
-} from "@/data/portfolio";
+import { latestNotes } from "@/data/notes";
+import { person, homeMarks, quietTopics } from "@/data/personal";
 import config from "@/config";
 
 const locale = Astro.currentLocale ?? config.site.lang;
 ---
 
-<Layout title={`${profile.name} | 个人作品集`} description={profile.summary}>
+<Layout title={person.siteTitle} description={person.intro}>
   <Header />
   <main id="main-content" class="app-layout pt-8 pb-16 sm:pt-10 sm:pb-20">
-    <section class="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
-      <div class="space-y-6">
+    <section class="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+      <div class="space-y-7">
         <div
           class="border-border bg-background text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium"
         >
           <span class="bg-accent size-2 rounded-full" aria-hidden="true"></span>
-          <span>GitHub Pages 免费托管</span>
+          <span>个人介绍 · 随想随记</span>
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-5">
           <p
             class="text-muted-foreground text-sm font-medium tracking-[0.28em] uppercase"
           >
-            Portfolio
+            Personal Site
           </p>
           <h1
             class="text-foreground max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl"
           >
-            {profile.name}
+            {person.siteTitle}
           </h1>
           <p class="text-muted-foreground max-w-2xl text-lg leading-8">
-            {profile.role}。{profile.summary}
+            {person.intro}
           </p>
         </div>
 
         <div class="flex flex-wrap gap-3">
           <LinkButton
-            href={getRelativeLocaleUrl(locale, "projects")}
+            href={getRelativeLocaleUrl(locale, "notes")}
             class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
           >
-            查看项目
+            读随记
             <IconArrowRight class="size-4" />
           </LinkButton>
           <LinkButton
-            href={profile.github}
+            href={getRelativeLocaleUrl(locale, "about")}
+            class="border-border inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold"
+          >
+            关于我
+          </LinkButton>
+          <LinkButton
+            href={person.github}
             target="_blank"
             rel="noreferrer"
             class="border-border inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold"
@@ -68,20 +68,16 @@ const locale = Astro.currentLocale ?? config.site.lang;
 
         <div class="grid gap-3 sm:grid-cols-3">
           {
-            heroStats.map(item => (
+            homeMarks.map(item => (
               <div class="border-border bg-background rounded-2xl border p-4">
                 <p class="text-muted-foreground text-xs tracking-[0.22em] uppercase">
                   {item.label}
                 </p>
-                <p class="mt-2 text-base font-semibold">{item.value}</p>
+                <p class="mt-2 text-sm leading-6 font-medium">{item.value}</p>
               </div>
             ))
           }
         </div>
-
-        <p class="text-muted-foreground text-sm leading-6">
-          {profile.availability}
-        </p>
       </div>
 
       <aside class="border-border bg-background rounded-[1.5rem] border p-5">
@@ -90,125 +86,67 @@ const locale = Astro.currentLocale ?? config.site.lang;
             <p
               class="text-muted-foreground text-xs tracking-[0.24em] uppercase"
             >
-              作品位
+              Latest
             </p>
-            <h2 class="mt-2 text-lg font-semibold">预留给后续项目</h2>
+            <h2 class="mt-2 text-lg font-semibold">最近写下的</h2>
           </div>
           <span
             class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs"
           >
-            3 slots
+            随记
           </span>
         </div>
 
         <div class="mt-5 space-y-4">
           {
-            featuredProjectSlots.map(slot => (
-              <div class="border-border bg-muted/15 rounded-2xl border p-4">
+            latestNotes.map(note => (
+              <a
+                href={getRelativeLocaleUrl(locale, `notes/${note.slug}`)}
+                class="border-border bg-muted/15 hover:border-accent/50 block rounded-2xl border p-4 transition-colors"
+              >
                 <div class="flex items-center justify-between gap-3">
-                  <div>
-                    <p class="text-muted-foreground text-xs font-semibold tracking-[0.24em] uppercase">
-                      {slot.slot}
-                    </p>
-                    <p class="mt-1 font-medium">{slot.title}</p>
-                  </div>
+                  <time
+                    datetime={note.datetime}
+                    class="text-muted-foreground text-xs"
+                  >
+                    {note.date}
+                  </time>
                   <span class="border-border text-muted-foreground rounded-full border px-2.5 py-1 text-xs">
-                    {slot.status}
+                    {note.mood}
                   </span>
                 </div>
-                <div class="border-border bg-background mt-4 aspect-[16/8.5] rounded-2xl border border-dashed p-4">
-                  <div class="flex h-full flex-col justify-between">
-                    <div class="space-y-2">
-                      <div class="bg-foreground/10 h-4 w-1/2 rounded-full" />
-                      <div class="bg-foreground/10 h-4 w-4/5 rounded-full" />
-                    </div>
-                    <div class="text-muted-foreground flex items-center justify-between text-xs">
-                      <span>截图位</span>
-                      <span>待补充</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <h3 class="mt-3 text-base font-semibold">{note.title}</h3>
+                <p class="text-muted-foreground mt-2 line-clamp-2 text-sm leading-6">
+                  {note.excerpt}
+                </p>
+              </a>
             ))
           }
         </div>
       </aside>
     </section>
 
-    <section class="mt-16 space-y-6">
-      <div class="flex items-end justify-between gap-4">
-        <div>
-          <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-            作品结构
-          </p>
-          <h2 class="mt-2 text-2xl font-semibold">后续项目直接往这里填</h2>
-        </div>
-        <LinkButton
-          href={getRelativeLocaleUrl(locale, "projects")}
-          class="text-muted-foreground hover:text-accent hidden items-center gap-2 text-sm font-medium sm:inline-flex"
-        >
-          打开项目页
-          <IconArrowRight class="size-4" />
-        </LinkButton>
+    <section class="mt-16 grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+      <div>
+        <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
+          Notes
+        </p>
+        <h2 class="mt-3 text-2xl font-semibold">
+          这里会放一些不那么正式、但更接近我的文字
+        </h2>
       </div>
 
-      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div class="grid gap-4 md:grid-cols-3">
         {
-          capabilityCards.map(card => (
+          quietTopics.map(item => (
             <div class="border-border bg-background rounded-[1.25rem] border p-5">
-              <h3 class="text-base font-semibold">{card.title}</h3>
+              <h3 class="text-base font-semibold">{item.title}</h3>
               <p class="text-muted-foreground mt-3 text-sm leading-6">
-                {card.summary}
+                {item.summary}
               </p>
             </div>
           ))
         }
-      </div>
-    </section>
-
-    <section class="mt-16 grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-      <div class="border-border bg-background rounded-[1.5rem] border p-5">
-        <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-          我关注的内容
-        </p>
-        <h2 class="mt-2 text-2xl font-semibold">
-          把项目做成能被面试官快速看懂的结构
-        </h2>
-        <p class="text-muted-foreground mt-4 text-sm leading-6">
-          主页先讲清楚你能解决什么，再把项目、结果和技术栈按层级展开。这个站点就是按这个思路搭的。
-        </p>
-        <div class="mt-6 flex flex-wrap gap-2">
-          {
-            buildStack.map(item => (
-              <span class="border-border text-muted-foreground rounded-full border px-3 py-1 text-xs">
-                {item}
-              </span>
-            ))
-          }
-        </div>
-      </div>
-
-      <div class="border-border bg-background rounded-[1.5rem] border p-5">
-        <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-          工作方式
-        </p>
-        <div class="mt-4 space-y-4">
-          {
-            workflow.map(item => (
-              <div class="flex gap-4">
-                <div class="text-accent shrink-0 text-sm font-semibold">
-                  {item.step}
-                </div>
-                <div class="min-w-0">
-                  <h3 class="text-base font-semibold">{item.title}</h3>
-                  <p class="text-muted-foreground mt-2 text-sm leading-6">
-                    {item.summary}
-                  </p>
-                </div>
-              </div>
-            ))
-          }
-        </div>
       </div>
     </section>
 
@@ -220,30 +158,22 @@ const locale = Astro.currentLocale ?? config.site.lang;
       >
         <div>
           <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-            联系方式
+            Slowly
           </p>
           <h2 class="mt-2 text-2xl font-semibold">
-            我会先把主页做成能直接投递的版本
+            先让它成为一个愿意回来写两句的地方
           </h2>
+          <p class="text-muted-foreground mt-3 max-w-2xl text-sm leading-6">
+            {person.note}
+          </p>
         </div>
-        <div class="flex flex-wrap gap-3">
-          <LinkButton
-            href={profile.github}
-            target="_blank"
-            rel="noreferrer"
-            class="border-border inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold"
-          >
-            <IconGithub class="size-4" />
-            GitHub
-          </LinkButton>
-          <LinkButton
-            href={getRelativeLocaleUrl(locale, "projects")}
-            class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
-          >
-            项目页
-            <IconArrowRight class="size-4" />
-          </LinkButton>
-        </div>
+        <LinkButton
+          href={getRelativeLocaleUrl(locale, "notes")}
+          class="bg-accent text-accent-foreground inline-flex w-fit items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
+        >
+          打开随记
+          <IconArrowRight class="size-4" />
+        </LinkButton>
       </div>
     </section>
   </main>

@@ -3,7 +3,7 @@ import type { UIStrings } from "../types";
 export default {
   nav: {
     home: "首页",
-    posts: "项目",
+    posts: "随记",
     tags: "标签",
     about: "关于",
     archives: "归档",
@@ -44,8 +44,8 @@ export default {
     tagsTitle: "标签",
     tagsDesc: "站点中使用过的所有标签。",
 
-    postsTitle: "项目",
-    postsDesc: "当前站点预留的项目展示位。",
+    postsTitle: "随记",
+    postsDesc: "一些随时写下来的想法和记录。",
 
     archivesTitle: "归档",
     archivesDesc: "按时间整理的记录。",

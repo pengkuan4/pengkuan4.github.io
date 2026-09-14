@@ -1,17 +1,18 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import IconGithub from "@/assets/icons/socials/github.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
-import { buildStack, profile, workflow } from "@/data/portfolio";
+import { aboutBlocks, person, quietTopics } from "@/data/personal";
 import config from "@/config";
+
+const locale = Astro.currentLocale ?? config.site.lang;
 ---
 
-<Layout
-  title={`关于 | ${config.site.title}`}
-  description="彭宽的求职作品集说明、技术基础与当前项目方向。"
->
+<Layout title={`关于 | ${config.site.title}`} description={person.intro}>
   <Header />
   <main id="main-content" class="app-layout pt-8 pb-16 sm:pt-10 sm:pb-20">
     <section
@@ -22,91 +23,75 @@ import config from "@/config";
           About
         </p>
         <h1 class="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-          用作品说明能力，而不是只列技能。
+          关于我，也关于这个正在慢慢长出来的小站。
         </h1>
         <p class="text-muted-foreground mt-5 max-w-2xl text-base leading-7">
-          {profile.summary}
+          {person.intro}
         </p>
         <p class="text-muted-foreground mt-4 max-w-2xl text-sm leading-6">
-          这个主页不依赖付费域名或服务器，全部内容可以通过 GitHub 仓库维护，并由
-          GitHub Pages 自动发布。
+          {person.note}
         </p>
-        <LinkButton
-          href={profile.github}
-          target="_blank"
-          rel="noreferrer"
-          class="bg-accent text-accent-foreground mt-6 inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
-        >
-          <IconGithub class="size-4" />
-          在 GitHub 查看
-        </LinkButton>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <LinkButton
+            href={getRelativeLocaleUrl(locale, "notes")}
+            class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold"
+          >
+            读随记
+            <IconArrowRight class="size-4" />
+          </LinkButton>
+          <LinkButton
+            href={person.github}
+            target="_blank"
+            rel="noreferrer"
+            class="border-border inline-flex items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold"
+          >
+            <IconGithub class="size-4" />
+            GitHub
+          </LinkButton>
+        </div>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-        <div class="border-border bg-background rounded-[1.25rem] border p-5">
-          <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-            当前方向
-          </p>
-          <p class="mt-3 text-lg font-semibold">
-            前端页面、自动化流程、静态站点
-          </p>
-          <p class="text-muted-foreground mt-3 text-sm leading-6">
-            持续把项目经验沉淀为截图、案例说明和可访问链接。
-          </p>
-        </div>
-
-        <div class="border-border bg-background rounded-[1.25rem] border p-5">
-          <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-            求职用途
-          </p>
-          <p class="mt-3 text-lg font-semibold">
-            让招聘方在几分钟内看懂项目能力。
-          </p>
-          <p class="text-muted-foreground mt-3 text-sm leading-6">
-            每个项目会优先呈现目标、你的参与内容、交付结果和技术实现。
-          </p>
-        </div>
+        {
+          aboutBlocks.map(block => (
+            <div class="border-border bg-background rounded-[1.25rem] border p-5">
+              <h2 class="text-base font-semibold">{block.title}</h2>
+              <p class="text-muted-foreground mt-3 text-sm leading-6">
+                {block.summary}
+              </p>
+            </div>
+          ))
+        }
       </div>
     </section>
 
     <section class="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
       <div>
         <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-          技术基础
+          What I Write
         </p>
-        <h2 class="mt-3 text-2xl font-semibold">当前站点使用的工具</h2>
-        <div class="mt-5 flex flex-wrap gap-2">
-          {
-            buildStack.map(item => (
-              <span class="border-border text-muted-foreground rounded-full border px-3 py-1.5 text-sm">
-                {item}
-              </span>
-            ))
-          }
-        </div>
+        <h2 class="mt-3 text-2xl font-semibold">我想在这里记录什么</h2>
+        <p class="text-muted-foreground mt-4 max-w-xl text-sm leading-6">
+          不把它做成很重的栏目，也不急着固定一种风格。只要是真实想写下来的东西，都可以先放进来。
+        </p>
       </div>
 
-      <div>
-        <p class="text-muted-foreground text-xs tracking-[0.24em] uppercase">
-          作品表达
-        </p>
-        <div class="mt-4 space-y-5">
-          {
-            workflow.map(item => (
-              <div class="flex gap-4">
-                <p class="text-accent shrink-0 text-sm font-semibold">
-                  {item.step}
+      <div class="space-y-5">
+        {
+          quietTopics.map((item, index) => (
+            <div class="flex gap-4">
+              <p class="text-accent shrink-0 text-sm font-semibold">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <div>
+                <h3 class="text-base font-semibold">{item.title}</h3>
+                <p class="text-muted-foreground mt-2 text-sm leading-6">
+                  {item.summary}
                 </p>
-                <div>
-                  <h2 class="text-base font-semibold">{item.title}</h2>
-                  <p class="text-muted-foreground mt-2 text-sm leading-6">
-                    {item.summary}
-                  </p>
-                </div>
               </div>
-            ))
-          }
-        </div>
+            </div>
+          ))
+        }
       </div>
     </section>
   </main>
