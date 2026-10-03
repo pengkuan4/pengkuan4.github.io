@@ -3,8 +3,8 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://pengkuan4.github.io/",
-    title: "彭宽的个人小站",
-    description: "关于彭宽的自我介绍、随想和日常记录。",
+    title: "彭宽",
+    description: "彭宽的随想和日记。",
     author: "彭宽",
     profile: "https://github.com/pengkuan4",
     ogImage: "favicon.svg",

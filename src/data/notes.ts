@@ -3,14 +3,15 @@ export type ThoughtNote = {
   title: string;
   date: string;
   datetime: string;
-  mood: string;
   excerpt: string;
-  tags: string[];
   body: string[];
 };
 
-type NoteFrontmatter = Omit<ThoughtNote, "body" | "slug"> & {
+type NoteFrontmatter = Partial<Omit<ThoughtNote, "body" | "slug">> & {
+  date: string;
+  datetime: string;
   slug?: string;
+  title: string;
 };
 
 const rawNoteModules = import.meta.glob("../content/notes/*.md", {
@@ -74,28 +75,19 @@ export const notes: ThoughtNote[] = Object.entries(rawNoteModules)
       .map(paragraph => paragraph.replace(/\s*\r?\n\s*/g, " ").trim())
       .filter(Boolean);
 
-    if (
-      !slug ||
-      !data.title ||
-      !data.date ||
-      !data.datetime ||
-      !data.mood ||
-      !data.excerpt
-    ) {
+    if (!slug || !data.title || !data.date || !data.datetime) {
       throw new Error(`Invalid note frontmatter in ${path}`);
     }
+
+    const excerpt = data.excerpt ?? paragraphs[0] ?? data.title;
 
     return {
       slug,
       title: data.title,
       date: data.date,
       datetime: data.datetime,
-      mood: data.mood,
-      excerpt: data.excerpt,
-      tags: Array.isArray(data.tags) ? data.tags : [],
-      body: paragraphs.length > 0 ? paragraphs : [data.excerpt],
+      excerpt,
+      body: paragraphs.length > 0 ? paragraphs : [excerpt],
     };
   })
   .sort((a, b) => b.datetime.localeCompare(a.datetime));
-
-export const latestNotes = notes.slice(0, 3);

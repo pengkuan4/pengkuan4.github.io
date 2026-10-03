@@ -4,8 +4,6 @@ import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconX from "@/assets/icons/IconX.svg";
-import IconGithub from "@/assets/icons/socials/github.svg";
-import LinkButton from "./LinkButton.astro";
 import { stripBase, stripLocale } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
@@ -40,31 +38,24 @@ const navItems = [
     label: "随记",
     active: isActive("/notes"),
   },
-  {
-    href: getRelativeLocaleUrl(locale, "about"),
-    label: "关于",
-    active: isActive("/about"),
-  },
 ];
-
-const githubHref = site.profile ?? "https://github.com/pengkuan4";
 ---
 
 <a
   id="skip-to-content"
   href="#main-content"
-  class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4"
+  class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg focus:top-4"
 >
   {t.a11y.skipToContent}
 </a>
 
 <header class="app-layout">
   <div
-    class="border-border flex items-center justify-between border-b py-4 sm:py-6"
+    class="border-border flex items-center justify-between border-b py-5 sm:py-7"
   >
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="text-xl leading-8 font-semibold whitespace-nowrap sm:text-2xl sm:leading-none"
+      class="text-base leading-none font-medium whitespace-nowrap"
     >
       {site.title}
     </a>
@@ -76,37 +67,27 @@ const githubHref = site.profile ?? "https://github.com/pengkuan4";
             <a
               href={item.href}
               class:list={[
-                "rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                "px-2 py-1 text-sm",
                 "hover:text-accent",
-                { "text-accent bg-muted/50": item.active },
+                { "text-foreground": item.active },
+                { "text-muted-foreground": !item.active },
               ]}
             >
               {item.label}
             </a>
           ))
         }
-        <LinkButton
-          href={githubHref}
-          target="_blank"
-          rel="noreferrer"
-          class="focus-outline border-border hover:text-accent inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium"
-          title="GitHub"
-          aria-label="GitHub"
-        >
-          <IconGithub class="size-4" />
-          <span>GitHub</span>
-        </LinkButton>
         {
           features.lightAndDarkMode && (
             <button
               id="theme-btn"
-              class="focus-outline border-border hover:text-accent relative size-10 rounded-full border p-2"
+              class="focus-outline text-muted-foreground hover:text-foreground relative ml-2 size-8"
               title={t.a11y.toggleTheme}
               aria-label="auto"
               aria-live="polite"
             >
-              <IconMoon class="absolute top-1/2 left-1/2 translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-              <IconSunHigh class="absolute top-1/2 left-1/2 translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+              <IconMoon class="absolute top-1/2 left-1/2 translate-[-50%] scale-100 rotate-0 dark:scale-0 dark:-rotate-90" />
+              <IconSunHigh class="absolute top-1/2 left-1/2 translate-[-50%] scale-0 rotate-90 dark:scale-100 dark:rotate-0" />
             </button>
           )
         }
@@ -114,7 +95,7 @@ const githubHref = site.profile ?? "https://github.com/pengkuan4";
 
       <button
         id="menu-btn"
-        class="focus-outline border-border flex size-10 items-center justify-center rounded-full border md:hidden"
+        class="focus-outline flex size-9 items-center justify-center md:hidden"
         aria-label={t.a11y.openMenu}
         aria-expanded="false"
         aria-controls="menu-items"
@@ -138,9 +119,10 @@ const githubHref = site.profile ?? "https://github.com/pengkuan4";
             <a
               href={item.href}
               class:list={[
-                "border-border flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium",
+                "flex items-center justify-between py-2 text-sm",
                 "hover:text-accent",
-                { "text-accent bg-muted/50": item.active },
+                { "text-foreground": item.active },
+                { "text-muted-foreground": !item.active },
               ]}
             >
               <span>{item.label}</span>
@@ -149,31 +131,20 @@ const githubHref = site.profile ?? "https://github.com/pengkuan4";
           </li>
         ))
       }
-      <li>
-        <LinkButton
-          href={githubHref}
-          target="_blank"
-          rel="noreferrer"
-          class="border-border hover:text-accent flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium"
-        >
-          <span>GitHub</span>
-          <IconGithub class="size-4" />
-        </LinkButton>
-      </li>
       {
         features.lightAndDarkMode && (
           <li>
             <button
               id="theme-btn-mobile"
-              class="focus-outline border-border hover:text-accent flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-sm font-medium"
+              class="focus-outline text-muted-foreground hover:text-foreground flex w-full items-center justify-between py-2 text-sm"
               title={t.a11y.toggleTheme}
               aria-label="auto"
               aria-live="polite"
             >
               <span>{t.a11y.toggleTheme}</span>
               <span class="relative size-5">
-                <IconMoon class="absolute top-0 left-0 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <IconSunHigh class="absolute top-0 left-0 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                <IconMoon class="absolute top-0 left-0 scale-100 rotate-0 dark:scale-0 dark:-rotate-90" />
+                <IconSunHigh class="absolute top-0 left-0 scale-0 rotate-90 dark:scale-100 dark:rotate-0" />
               </span>
             </button>
           </li>

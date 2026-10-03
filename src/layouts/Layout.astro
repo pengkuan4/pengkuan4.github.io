@@ -1,5 +1,4 @@
 ---
-import { ClientRouter } from "astro:transitions";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
@@ -28,7 +27,7 @@ const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
 <html
   dir={site.dir ?? "ltr"}
   lang={Astro.currentLocale ?? site.lang}
-  class="overflow-y-scroll scroll-smooth"
+  class="overflow-y-scroll"
 >
   <head>
     <meta charset="UTF-8" />
@@ -93,8 +92,6 @@ const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
         window.__theme = { value: theme };
       })();
     </script>
-
-    <ClientRouter />
   </head>
   <body
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
