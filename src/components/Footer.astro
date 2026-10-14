@@ -1,23 +1,23 @@
 ---
-import type { HTMLAttributes } from "astro/types";
 import { person } from "@/data/personal";
 
-type Props = {
-  noMarginTop?: boolean;
-} & HTMLAttributes<"footer">;
-
-const { noMarginTop = false, class: className, ...attrs } = Astro.props;
-const currentYear = new Date().getFullYear();
+const year = new Date().getFullYear();
 ---
 
-<footer
-  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
-  {...attrs}
->
-  <div
-    class="border-border text-muted-foreground flex items-center justify-between border-t py-8 text-sm"
-  >
-    <span>{person.name}</span>
-    <span>{currentYear}</span>
+<footer class="app-layout site-footer">
+  <div class="footer-inner">
+    <dl class="contact-list">
+      <div>
+        <dt>邮箱</dt>
+        <dd><a href={`mailto:${person.email}`}>{person.email}</a></dd>
+      </div>
+      <div>
+        <dt>微信</dt>
+        <dd>{person.wechat}</dd>
+      </div>
+    </dl>
+    <small class="copyright"
+      >{person.name} <span aria-hidden="true">/</span> {year}</small
+    >
   </div>
 </footer>

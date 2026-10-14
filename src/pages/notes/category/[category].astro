@@ -1,0 +1,16 @@
+---
+import NotesPage from "@/components/NotesPage.astro";
+
+type Props = { category: "随笔" | "技术" };
+
+export function getStaticPaths() {
+  return [
+    { params: { category: "essays" }, props: { category: "随笔" } },
+    { params: { category: "tech" }, props: { category: "技术" } },
+  ];
+}
+
+const { category } = Astro.props;
+---
+
+<NotesPage {category} />

@@ -1,0 +1,53 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import { getAssetPath } from "@/utils/withBase";
+
+type Props = { moment: CollectionEntry<"moments"> };
+const { moment } = Astro.props;
+const { data } = moment;
+const { Content } = await render(moment);
+const src = data.src.startsWith("/") ? getAssetPath(data.src) : data.src;
+const poster =
+  data.type === "video" && data.poster
+    ? data.poster.startsWith("/")
+      ? getAssetPath(data.poster)
+      : data.poster
+    : undefined;
+---
+
+<figure class="moment" id={moment.id}>
+  {
+    data.type === "image" ? (
+      <a
+        class="moment-image"
+        href={src}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`查看原图：${data.alt}`}
+      >
+        <img src={src} alt={data.alt} loading="lazy" decoding="async" />
+      </a>
+    ) : (
+      <video
+        src={src}
+        {poster}
+        controls
+        playsinline
+        preload="metadata"
+        aria-label={data.title}
+      >
+        <a href={src}>{data.title}</a>
+      </video>
+    )
+  }
+  <figcaption>
+    <time datetime={data.datetime}>{data.datetime.replaceAll("-", ".")}</time>
+    {
+      moment.body?.trim() && (
+        <div class="moment-caption app-prose">
+          <Content />
+        </div>
+      )
+    }
+  </figcaption>
+</figure>

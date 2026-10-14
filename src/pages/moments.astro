@@ -1,0 +1,32 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Moment from "@/components/Moment.astro";
+import { getMoments } from "@/data/moments";
+import config from "@/config";
+
+const moments = await getMoments();
+---
+
+<Layout title={`影像 | ${config.site.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout archive-main">
+    <header class="page-heading">
+      <h1>影像</h1>
+      <span class="item-count">{String(moments.length).padStart(2, "0")}</span>
+    </header>
+    {
+      moments.length ? (
+        <div class="moments-feed">
+          {moments.map(moment => (
+            <Moment {moment} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">暂无影像。</p>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

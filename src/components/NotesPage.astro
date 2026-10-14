@@ -1,0 +1,51 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import NoteList from "@/components/NoteList.astro";
+import { getNotes } from "@/data/notes";
+import config from "@/config";
+
+type Props = { category?: "随笔" | "技术" };
+const { category } = Astro.props;
+const locale = Astro.currentLocale ?? config.site.lang;
+const notes = (await getNotes()).filter(
+  note => !category || note.data.category === category
+);
+const filters = [
+  { label: "全部", category: undefined, path: "notes" },
+  { label: "随笔", category: "随笔", path: "notes/category/essays" },
+  { label: "技术", category: "技术", path: "notes/category/tech" },
+];
+---
+
+<Layout title={`${category ?? "文字"} | ${config.site.title}`}>
+  <Header />
+  <main id="main-content" class="app-layout archive-main">
+    <header class="page-heading">
+      <h1>文字</h1>
+      <span class="item-count">{String(notes.length).padStart(2, "0")}</span>
+    </header>
+    <nav class="category-nav" aria-label="文章分类">
+      {
+        filters.map(filter => (
+          <a
+            href={getRelativeLocaleUrl(locale, filter.path)}
+            aria-current={category === filter.category ? "page" : undefined}
+          >
+            {filter.label}
+          </a>
+        ))
+      }
+    </nav>
+    {
+      notes.length ? (
+        <NoteList {notes} />
+      ) : (
+        <p class="empty-state">暂无文章。</p>
+      )
+    }
+  </main>
+  <Footer />
+</Layout>

@@ -1,123 +1,155 @@
 @plugin "@tailwindcss/typography";
 
 @layer base {
-  /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
     @apply prose;
+    max-width: none;
+    min-width: 0;
+    color: var(--color-foreground);
+    font-size: 16px;
+    line-height: 2;
+    overflow-wrap: anywhere;
 
     h1,
     h2,
     h3,
     h4,
-    th {
-      @apply text-foreground mb-3;
-    }
-
-    h3 {
-      @apply italic;
-    }
-
-    p,
     strong,
-    ol,
-    ul,
-    figcaption,
-    table,
-    code {
-      @apply text-foreground;
+    th {
+      color: var(--color-foreground);
     }
 
+    h2,
+    h3,
+    h4 {
+      font-weight: 600;
+      line-height: 1.6;
+    }
+    h2 {
+      font-size: 24px;
+      margin-top: 2em;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    p {
+      margin-block: 1.4em;
+    }
     a {
-      @apply text-foreground hover:text-accent wrap-break-word decoration-dashed underline-offset-4 focus-visible:no-underline;
+      color: var(--color-accent);
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
     }
-
-    ul {
-      @apply overflow-x-clip;
+    li::marker {
+      color: var(--color-muted-foreground);
     }
-
-    li {
-      @apply marker:text-accent;
+    img,
+    video {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin-block: 2em;
     }
-
+    video {
+      width: 100%;
+    }
     hr {
-      @apply border-border;
+      border-color: var(--color-border);
+      margin-block: 3em;
     }
-
-    img {
-      @apply border-border mx-auto border;
-    }
-
-    img[role="button"] {
-      @apply cursor-zoom-in;
-
-      &:focus-visible {
-        @apply outline-2 outline-offset-2 outline-dashed;
-      }
-    }
-
-    figcaption {
-      @apply opacity-75;
-    }
-
-    table {
-      th,
-      td {
-        @apply border-border border p-2;
-      }
-
-      th {
-        @apply py-1.5;
-      }
-    }
-
-    code {
-      @apply bg-muted/75 text-foreground rounded p-1 wrap-break-word before:content-none after:content-none;
-    }
-
-    .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit p-0;
-    }
-
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      color: var(--color-muted-foreground);
+      font-style: normal;
+      font-weight: 400;
+      border-left: 2px solid var(--color-border);
     }
-
-    details:not(.callout) {
-      @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
+    blockquote p:first-of-type::before,
+    blockquote p:last-of-type::after {
+      content: none;
     }
-
-    summary {
-      @apply focus-visible:outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-dashed;
+    code {
+      color: var(--color-foreground);
+      background: var(--color-muted);
+      padding: 2px 5px;
+      font-size: 0.85em;
+      font-weight: 400;
+      border-radius: 3px;
     }
-
+    code::before,
+    code::after {
+      content: none;
+    }
     pre {
-      @apply focus-visible:outline-accent focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-dashed;
+      max-width: 100%;
+      overflow-x: auto;
+      padding: 20px;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    pre code {
+      display: block;
+      min-width: max-content;
+      padding: 0;
+      background: transparent;
+      font-size: inherit;
+    }
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+    th,
+    td {
+      min-width: 100px;
+      border-bottom: 1px solid var(--color-border);
+      padding: 12px 16px;
+    }
+    summary {
+      cursor: pointer;
     }
   }
 
-  /* ===== Code Blocks & Syntax Highlighting ===== */
-  .astro-code {
-    @apply outline-border flex border bg-(--shiki-light-bg) text-(--shiki-light) [&_span]:text-(--shiki-light);
+  .article-body > :first-child {
+    margin-top: 0;
   }
-
-  html[data-theme="dark"] .astro-code {
-    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
+  .moment-caption.app-prose {
+    font-size: 14px;
+    line-height: 1.9;
   }
+  .moment-caption.app-prose p {
+    margin-block: 8px;
+  }
+  .astro-code,
+  .astro-code span {
+    background-color: var(--shiki-light-bg);
+    color: var(--shiki-light);
+  }
+  .astro-code .line.diff.add {
+    background: #e5f2e7;
+  }
+  .astro-code .line.diff.remove {
+    background: #fae7e7;
+  }
+  .astro-code .line.highlighted,
+  .astro-code .highlighted-word {
+    background: #edf0ed;
+  }
+}
 
-  /* Styles for Shiki transformers */
-  /* https://shiki.style/packages/transformers */
-  .astro-code {
-    .line.diff.add {
-      @apply relative inline-block w-full bg-green-400/20 before:absolute before:-left-3 before:text-green-500 before:content-['+'];
-    }
-    .line.diff.remove {
-      @apply relative inline-block w-full bg-red-500/20 before:absolute before:-left-3 before:text-red-500 before:content-['-'];
-    }
-    .line.highlighted {
-      @apply inline-block w-full bg-slate-400/20;
-    }
-    .highlighted-word {
-      @apply border-border rounded-sm border px-0.5 py-px;
-    }
+@media (max-width: 600px) {
+  .app-prose {
+    font-size: 15px;
+  }
+  .app-prose h2 {
+    font-size: 21px;
+  }
+  .app-prose h3 {
+    font-size: 18px;
+  }
+  .app-prose pre {
+    padding: 16px;
   }
 }

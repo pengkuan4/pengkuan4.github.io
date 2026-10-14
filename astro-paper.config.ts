@@ -4,7 +4,7 @@ export default defineAstroPaperConfig({
   site: {
     url: "https://pengkuan4.github.io/",
     title: "彭宽",
-    description: "彭宽的随想和日记。",
+    description: "彭宽。喜欢腕力和卧推，也喜欢写一点东西。生活随笔、技术与日常影像。",
     author: "彭宽",
     profile: "https://github.com/pengkuan4",
     ogImage: "favicon.svg",
@@ -18,7 +18,7 @@ export default defineAstroPaperConfig({
     scheduledPostMargin: 15 * 60 * 1000,
   },
   features: {
-    lightAndDarkMode: true,
+    lightAndDarkMode: false,
     dynamicOgImage: false,
     showArchives: false,
     showBackButton: false,

@@ -1,53 +1,53 @@
 ---
+import { render, type CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import { notes, type ThoughtNote } from "@/data/notes";
+import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
+import { getNotes } from "@/data/notes";
 import config from "@/config";
 
-type Props = {
-  note: ThoughtNote;
-};
+type Props = { note: CollectionEntry<"notes"> };
 
-export function getStaticPaths() {
-  return notes.map(note => ({
-    params: { slug: note.slug },
+export async function getStaticPaths() {
+  return (await getNotes()).map(note => ({
+    params: { slug: note.id },
     props: { note },
   }));
 }
 
 const { note } = Astro.props;
+const { Content } = await render(note);
 const locale = Astro.currentLocale ?? config.site.lang;
 ---
 
 <Layout
-  title={`${note.title} | ${config.site.title}`}
-  description={note.excerpt}
+  title={`${note.data.title} | ${config.site.title}`}
+  description={note.data.excerpt ??
+    `${note.data.title}，彭宽的${note.data.category}。`}
 >
   <Header />
-  <main id="main-content" class="app-layout py-14 sm:py-20">
-    <article class="max-w-3xl">
-      <a
-        href={getRelativeLocaleUrl(locale, "notes")}
-        class="text-muted-foreground hover:text-accent text-sm underline-offset-4 hover:underline"
-      >
-        返回随记
-      </a>
-
-      <header class="border-border mt-10 border-b pb-10">
-        <time datetime={note.datetime} class="text-muted-foreground text-sm">
-          {note.date}
-        </time>
-        <h1 class="mt-5 text-4xl font-normal tracking-normal sm:text-5xl">
-          {note.title}
-        </h1>
+  <main id="main-content" class="app-layout article-main">
+    <a class="back-link" href={getRelativeLocaleUrl(locale, "notes")}
+      ><IconArrowLeft aria-hidden="true" />文字</a
+    >
+    <article>
+      <header class="article-heading">
+        <p class="article-meta">
+          <time datetime={note.data.datetime}
+            >{note.data.date ?? note.data.datetime.replaceAll("-", ".")}</time
+          ><span>{note.data.category}</span>
+        </p>
+        <h1>{note.data.title}</h1>
       </header>
-
-      <div class="mt-10 max-w-2xl space-y-6 text-base leading-9">
-        {note.body.map(paragraph => <p>{paragraph}</p>)}
-      </div>
+      <div class="app-prose article-body"><Content /></div>
     </article>
+    <a
+      class="back-link article-return"
+      href={getRelativeLocaleUrl(locale, "notes")}
+      ><IconArrowLeft aria-hidden="true" />全部文字</a
+    >
   </main>
   <Footer />
 </Layout>
